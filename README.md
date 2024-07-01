@@ -70,7 +70,7 @@ Imagine you are a weather forecaster. You use historical weather data to predict
 
 The abstract of this research paper highlights the development of a cost-efficient method for stock price prediction using an optimized LightGBM model. By incorporating cost awareness and technical indicators, the model achieves better prediction accuracy, profitability, and risk control compared to other models like XGBoost and Random Forest. This innovative approach helps investors make more informed decisions, reducing the likelihood of costly errors.
 
-Sure! Let's break down each of these technical indicators—moving averages (MA), relative strength index (RSI), and Bollinger Bands—explaining their purposes, how they work, and providing real-world examples. 📊
+---
 
 ### Moving Averages (MA) 📈
 
