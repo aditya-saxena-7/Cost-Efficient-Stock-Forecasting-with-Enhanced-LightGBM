@@ -4,18 +4,13 @@
 Welcome, everyone! Today, I'll be sharing my findings from my paper titled "Cost-Efficient Stock Forecasting with Enhanced LightGBM." This paper focuses on using machine learning techniques to predict stock prices while being mindful of costs involved in trading. Let's dive into the key concepts and sections of this research in a simplified manner.
 
 ### Table of Contents
-1. **Abstract**
-2. **Introduction**
-3. **Methodology**
-   - Feature Engineering
-   - Hyper-Parameter Optimization
-   - Cost Awareness Adjustment
-   - Model Effect Evaluation
-4. **Results**
-   - Predictive Accuracy
-   - Profitability Performance
-   - Risk Control Performance
-5. **Conclusion**
+1. [Introduction](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Introduction.md)
+2. [Model and Methodology](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Model%20and%20Methodology.md)
+3. [Data Descriptions and Feature Engineering](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Data%20Descriptions%20and%20Feature%20Engineering.md)
+4. [Hyperparameter Optimization](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Hyperparameter%20Optimization.md)
+5. [Cost Awareness](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Cost%20Awareness.md)
+6. [Performance and Measurement](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Performance%20and%20Measurement.md)
+7. [Conclusion](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Conclusion.md)
 
 ### Abstract 📈💡
 
@@ -110,7 +105,7 @@ The abstract of this research paper highlights the development of a cost-efficie
 
 **Formula**:
 
-RSI} = 100 - 100/ 1 + Average Gain/Average Loss
+RSI = 100 - 100/ 1 + Average Gain/Average Loss
 
 - **Average Gain**: The average of all gains over a specific period.
 - **Average Loss**: The average of all losses over the same period.
