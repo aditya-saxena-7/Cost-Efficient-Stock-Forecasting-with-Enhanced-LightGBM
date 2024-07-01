@@ -62,7 +62,7 @@ This section focuses on how data was selected, processed, and prepared for the s
 2. **CCI (Commodity Channel Index)**: Measures the difference between the current price and its historical average. Helps identify price reversals.
    - **Formula**: 
 
-     CCI} = (Typical Price - SMATP) / (0.015 * Mean Deviation)
+     CCI = (Typical Price - SMATP) / (0.015 * Mean Deviation)
 
      where SMATP = Simple Moving Average of Typical Price.
    - **Example**: Identifying if a stock is trading above or below its average price. 📊
@@ -90,3 +90,47 @@ This section focuses on how data was selected, processed, and prepared for the s
 
    - **Example**: Calculating how much a stock's price has changed compared to its price a month ago. 🔄📈
 
+
+---
+
+### Chande Momentum Oscillator (CMO) 💪📉📈
+
+**Purpose**:
+- The Chande Momentum Oscillator (CMO) is used to identify the strength and direction of a stock's momentum. It helps traders understand if a stock is overbought or oversold.
+
+**How It Works**:
+- The CMO calculates the difference between the sum of all recent gains and the sum of all recent losses over a specific period. The result is then divided by the sum of all price movements (both gains and losses) over the same period.
+
+**Interpretation**:
+- The CMO ranges from -100 to +100.
+- A CMO above +50 indicates that the stock is overbought.
+- A CMO below -50 indicates that the stock is oversold.
+
+**Real-World Example**:
+- Imagine you are looking at a stock over the past 20 days. If the stock has had more days with gains than losses, the CMO will be positive. If the gains are significantly higher than the losses, the CMO might be above +50, indicating that the stock is overbought and might be due for a price correction. Conversely, if there are more losses than gains, the CMO will be negative, and a value below -50 suggests the stock is oversold and might be due for a price increase.
+
+### Commodity Channel Index (CCI) 📈📉📊
+
+**Purpose**:
+- The Commodity Channel Index (CCI) is used to identify cyclical trends in a stock's price. It helps traders determine if a stock is trending or moving sideways and if it's reaching extreme conditions (overbought or oversold).
+
+**How It Works**:
+- The CCI measures the difference between the current price and the average price over a specific period. This difference is then divided by the mean deviation (average absolute deviation from the average price) and scaled by a constant (0.015).
+
+- **Typical Price**: The average of the high, low, and close prices for a given period.
+- **SMATP (Simple Moving Average of Typical Price)**: The average of the typical prices over a specific period.
+- **Mean Deviation**: The average of the absolute differences between the typical prices and the SMATP.
+
+**Interpretation**:
+- The CCI typically ranges from -100 to +100.
+- A CCI above +100 indicates that the stock is overbought.
+- A CCI below -100 indicates that the stock is oversold.
+
+**Real-World Example**:
+- Suppose you are analyzing a stock and its CCI value is +120. This suggests that the stock's price is significantly higher than its average price, indicating an overbought condition. It might be a good time to consider selling. Conversely, if the CCI value is -120, the stock's price is significantly lower than its average price, indicating an oversold condition. It might be a good time to consider buying.
+
+### Summary in Simple Terms
+- **CMO (Chande Momentum Oscillator)**: Measures the momentum of a stock by comparing recent gains to recent losses. If there are more gains, the CMO is high; if there are more losses, the CMO is low. High values suggest the stock is overbought, and low values suggest it is oversold. 💪📉📈
+- **CCI (Commodity Channel Index)**: Measures how far the current price is from the average price over a specific period. High values (above +100) suggest the stock is overbought, and low values (below -100) suggest it is oversold. 📊📉📈
+
+Both indicators help traders make informed decisions about buying or selling stocks based on market conditions. 📈📉📊
