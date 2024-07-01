@@ -93,6 +93,109 @@ cost_mat[:, 2] = 0.0
 cost_mat[:, 3] = 0.0
 return cost_mat
 ```
+### Explanation of Algorithm 2: Calculate Cost Matrix 📊💸
+
+This algorithm is designed to calculate the cost matrix for evaluating the financial implications of false-positive and false-negative predictions in a stock trading model. Let's break down the algorithm step-by-step, explaining the purpose and each part of the process.
+
+#### Purpose:
+The algorithm calculates the financial costs associated with false-positive (FP) and false-negative (FN) predictions for a set of stock transactions. It helps in understanding the potential losses due to incorrect predictions.
+
+#### Inputs and Outputs:
+- **Inputs**:
+  - `test_df`: A data frame or array with the shape `[n_samples]` containing the test data for stocks.
+  - `money_init`: The initial amount of money invested in each stock.
+- **Output**:
+  - `cost_mat`: An array-like structure with the shape `[n_samples, 4]`, containing the calculated costs.
+
+#### Variables:
+- `buy_rate`: The rate applied when buying stocks.
+- `sell_rate`: The rate applied when selling stocks.
+- `stamp_duty`: The tax or duty applied on stock transactions.
+- `money`: The initial amount of money available for investment.
+- `cost_df`: A copy of `test_df` used for calculations.
+- `fp_rate`: The rate for calculating the cost of false-positive errors.
+- `fn_rate`: The rate for calculating the cost of false-negative errors.
+- `tran_num`: The number of transactions based on the available money and stock price.
+- `buy_money`: The total amount spent on buying stocks.
+- `sell_money`: The total amount received from selling stocks.
+- `service_change`: The total service charge for the transactions.
+- `fp_Amt`: The array storing the calculated false-positive costs.
+- `fn_Amt`: The array storing the calculated false-negative costs.
+- `cost_mat`: The final cost matrix containing all the costs.
+
+### Step-by-Step Explanation:
+
+1. **Initialization**:
+   ```python
+   init buy_rate, sell_rate, stamp duty
+   money = money_init
+   cost_df = test_df
+   ```
+   - Initialize the buy rate, sell rate, and stamp duty.
+   - Set the initial amount of money (`money`) to `money_init`.
+   - Copy the test data (`test_df`) to `cost_df` for further processing.
+
+2. **Loop Through Each Row of `cost_df`**:
+   ```python
+   for all (i, row) ∈ cost_df do
+   ```
+   - Iterate through each row of the `cost_df` to calculate the costs for each stock.
+
+3. **Calculate Rates**:
+   ```python
+   fp_rate = fabs(row[buy_price] − row[sell_price])
+   fn_rate = fp_rate
+   ```
+   - Calculate the false-positive rate (`fp_rate`) as the absolute difference between the buy price and the sell price.
+   - Set the false-negative rate (`fn_rate`) to be equal to the false-positive rate.
+
+4. **Calculate Transaction Numbers and Amounts**:
+   ```python
+   tran_num = (money / row[buy_price]) // 100
+   buy_money = tran_num * row[buy_price]
+   sell_money = tran_num * row[sell_price]
+   ```
+   - Determine the number of transactions (`tran_num`) that can be made with the available money.
+   - Calculate the total amount spent on buying stocks (`buy_money`).
+   - Calculate the total amount received from selling stocks (`sell_money`).
+
+5. **Calculate Service Charges and Stamp Duty**:
+   ```python
+   service_change = buy_money * buy_rate + sell_money * sell_rate
+   stamp_duty = stamp_duty * sell_money
+   ```
+   - Calculate the total service charge (`service_change`) based on the buy and sell amounts and their respective rates.
+   - Calculate the stamp duty (`stamp_duty`) based on the sell amount.
+
+6. **Calculate False-Positive and False-Negative Costs**:
+   ```python
+   fp_Amt[i] = fp_rate * tran_num + service_change + stamp_duty
+   fn_Amt[i] = fn_rate * tran_num − service_change − stamp_duty
+   ```
+   - Compute the false-positive cost (`fp_Amt`) for the current row.
+   - Compute the false-negative cost (`fn_Amt`) for the current row.
+
+7. **Assign Calculated Costs to Cost Matrix**:
+   ```python
+   cost_mat[:, 0] = fp_Amt
+   cost_mat[:, 1] = fn_Amt
+   cost_mat[:, 2] = 0.0
+   cost_mat[:, 3] = 0.0
+   ```
+   - Assign the calculated false-positive costs to the first column of the cost matrix.
+   - Assign the calculated false-negative costs to the second column of the cost matrix.
+   - Set the third and fourth columns of the cost matrix to zero.
+
+8. **Return the Cost Matrix**:
+   ```python
+   return cost_mat
+   ```
+   - Return the final cost matrix containing the calculated costs.
+
+### Real-World Example:
+Imagine you have $10,000 to invest in a stock. The buy price is $100, and the sell price is $95. You calculate the number of shares you can buy, the total amount spent, and the total amount received from selling. You then compute the service charges and stamp duty. Finally, you determine the costs associated with false-positive and false-negative predictions, considering the difference between buy and sell prices and additional transaction costs.
+
+By following this algorithm, you can evaluate the financial impact of prediction errors in stock trading, helping to improve the model's cost awareness and decision-making. 💸📊
 
 #### Optimization with Cost Awareness 📉➡️📈
 
