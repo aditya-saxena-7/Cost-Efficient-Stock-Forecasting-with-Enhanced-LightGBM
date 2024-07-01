@@ -11,19 +11,19 @@ Cost awareness in stock prediction refers to the model's sensitivity to differen
 
 Traditional stock prediction models are evaluated using standard binary classification metrics:
 1. **Accuracy**: The ratio of correctly predicted observations to the total observations.
-   - **Formula**: \(\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}\)
+   - **Formula**: Accuracy = TP + TN / TP + TN + FP + FN
    - **Example**: If you correctly predict 80 out of 100 stock movements, your accuracy is 80%. 🎯
 
 2. **Recall (Sensitivity)**: The ratio of true positive predictions to the sum of true positive and false negative predictions.
-   - **Formula**: \(\text{Recall} = \frac{TP}{TP + FN}\)
+   - **Formula**: Recall = TP / TP + FN
    - **Example**: If you correctly predict 70 out of 100 actual positive movements, your recall is 70%. 🔍
 
 3. **Precision**: The ratio of true positive predictions to the sum of true positive and false positive predictions.
-   - **Formula**: \(\text{Precision} = \frac{TP}{TP + FP}\)
+   - **Formula**: Precision = TP / TP + FP
    - **Example**: If 60 out of 100 predicted positive movements are actually positive, your precision is 60%. 🧐
 
 4. **F1 Score**: The harmonic mean of precision and recall.
-   - **Formula**: \(\text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}\)
+   - **Formula**: F1 = 2 * Precision * Recall / (Precision + Recall)
    - **Example**: If both precision and recall are 75%, the F1 score is also 75%. 🔄
 
 #### Confusion Matrix 📊
