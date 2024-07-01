@@ -54,9 +54,7 @@ This section focuses on how data was selected, processed, and prepared for the s
 1. **CMO (Chande Momentum Oscillator)**: Measures the difference between the sum of recent gains and losses. Helps identify overbought or oversold conditions.
    - **Formula**: 
 
-     \[
-     \text{CMO} = 100 \times \left(\frac{\text{Su} - \text{Sd}}{\text{Su} + \text{Sd}}\right)
-     \]
+     CMO = 100 * ((Su - Sd)/(Su + Sd))
 
      where Su = Sum of gains, Sd = Sum of losses.
    - **Example**: Tracking if a stock is frequently gaining more than losing. 📈📉
@@ -64,9 +62,7 @@ This section focuses on how data was selected, processed, and prepared for the s
 2. **CCI (Commodity Channel Index)**: Measures the difference between the current price and its historical average. Helps identify price reversals.
    - **Formula**: 
 
-     \[
-     \text{CCI} = \frac{\text{Typical Price} - \text{SMATP}}{0.015 \times \text{Mean Deviation}}
-     \]
+     CCI} = (Typical Price - SMATP) / (0.015 * Mean Deviation)
 
      where SMATP = Simple Moving Average of Typical Price.
    - **Example**: Identifying if a stock is trading above or below its average price. 📊
@@ -83,18 +79,14 @@ This section focuses on how data was selected, processed, and prepared for the s
 6. **MOM (Momentum)**: Measures the speed of price changes over a period.
    - **Formula**: 
 
-     \[
-     \text{MOM} = \text{Price} - \text{Price of } n \text{ periods ago}
-     \]
+     MOM = Price - Price of n periods ago
 
    - **Example**: Identifying stocks that are gaining or losing momentum. 🏃💨
 
 7. **ROC (Rate of Change)**: Measures the percentage change in price over a given period.
    - **Formula**: 
 
-     \[
-     \text{ROC} = \left(\frac{\text{Closing Price}_p - \text{Closing Price}_{p-n}}{\text{Closing Price}_{p-n}}\right) \times 100
-     \]
+     ROC = ((Closing Price_p - Closing Price_p-n)/ Closing Price_p-n) * 100
 
    - **Example**: Calculating how much a stock's price has changed compared to its price a month ago. 🔄📈
 
