@@ -1,7 +1,5 @@
 ### Cost Awareness: Optimizing Stock Predictions 📊💡
 
-In this section, we explore the concept of cost awareness and its application in optimizing the LightGBM model for stock predictions. Let's break down the key concepts, terminologies, and methodologies involved, with detailed explanations and real-world examples.
-
 #### What is Cost Awareness? 🤔
 Cost awareness in stock prediction refers to the model's sensitivity to different types of prediction errors, particularly focusing on minimizing false-positive errors. A false-positive error in stock trading is when the model predicts a stock price will go up (a "buy" signal), but it doesn't, leading to a potential loss.
 
@@ -258,6 +256,135 @@ Let's consider a practical example to illustrate how minimizing false positives 
    - The model predicts stock prices for the next day. It only issues a "buy" signal if the predicted probability of price increase is very high, reducing the chances of false positives.
    - If the model predicts a 70% probability of price increase, it evaluates the potential cost. If the cost of a false positive (buying and the price doesn’t rise) is high, the model might avoid issuing a "buy" signal unless the probability is higher, say 85%.
 
-### Conclusion
+Let's dive deeper into how the cost matrix works, how `fp_Amt`, `fn_Amt`, and `scale_pos_weight` are calculated, and the flow of the algorithm to understand how it adjusts to minimize false positives.
 
-By integrating cost awareness into the LightGBM algorithm, the model becomes more conservative in issuing "buy" signals, thereby reducing the occurrence of false positives. This approach balances the trade-off between catching profitable opportunities and avoiding costly mistakes, ultimately enhancing the model's profitability and reliability in stock price prediction.
+### Cost Matrix and Algorithm Flow
+
+#### 1. Defining Cost Matrix Values (`fp_Amt` and `fn_Amt`)
+
+The cost matrix is central to making the LightGBM model cost-aware. The cost matrix helps the model focus more on avoiding false positives by assigning higher penalties to them. Here's a step-by-step process:
+
+1. **Data Preparation and Labeling:**
+   - The stock data is labeled for binary classification (buy/sell).
+   - If the next day's closing price is higher than today's, the label is 1 (buy); otherwise, it's 0 (sell).
+
+2. **Calculating Costs:**
+   - The cost of a false positive (`fp_Amt`) is the financial loss incurred if the model incorrectly predicts a price increase (buy signal).
+   - The cost of a false negative (`fn_Amt`) is the opportunity cost of not buying a stock that increases in price.
+
+**Example Calculation:**
+   - **False Positive (`fp_Amt`):** Assume you buy 100 shares at $50 each, expecting the price to go up. If the price drops to $45, the loss per share is $5. So, `fp_Amt = 100 * $5 = $500`.
+   - **False Negative (`fn_Amt`):** If you don't buy 100 shares at $50 each, and the price goes up to $55, the missed gain per share is $5. So, `fn_Amt = 100 * $5 = $500`.
+
+#### 2. Integrating Cost Awareness into LightGBM
+
+To integrate cost awareness, the algorithm adjusts the `scale_pos_weight` parameter. This parameter helps balance the class distribution and makes the model more sensitive to the class with higher cost (false positives in this case).
+
+### Algorithm Flow
+
+1. **Feature Engineering:**
+   - Prepare the features (technical indicators, OHLC prices, etc.) and label the data.
+
+2. **Hyperparameter Optimization with Optuna:**
+   - Optimize hyperparameters using time-series cross-validation.
+   - Initially, `scale_pos_weight` might be set to balance the classes without considering cost.
+
+3. **Cost Awareness Adjustment:**
+   - **Initialize Cost Matrix:**
+     ```python
+     cost_matrix = [[0, fp_Amt],
+                    [fn_Amt, 0]]
+     ```
+
+   - **Adjusting `scale_pos_weight`:**
+     - Use the cost matrix to adjust `scale_pos_weight`. This weight increases the importance of reducing false positives by increasing the weight for positive class (buy signal).
+
+Certainly! Let's delve into the mathematical rationale behind adjusting the `scale_pos_weight` using a cost matrix to reduce false positives in the LightGBM model.
+
+### Understanding `scale_pos_weight`
+
+The `scale_pos_weight` parameter in LightGBM adjusts the weight of positive samples to balance the classes. By increasing this weight, the algorithm penalizes errors on the positive class more heavily, which in turn reduces the likelihood of false positives.
+
+### Cost Matrix and `scale_pos_weight`
+
+A cost matrix assigns different penalties to different types of classification errors. For stock prediction:
+- **False Positive (FP)**: Predicting a price increase (buy signal) when the price does not increase.
+- **False Negative (FN)**: Not predicting a price increase (missed buy signal).
+
+### Example Cost Matrix
+Consider the following cost matrix:
+
+\[
+\begin{matrix}
+ & \text{Predict Negative} & \text{Predict Positive} \\
+\text{Actual Negative} & 0 & fp\_Amt \\
+\text{Actual Positive} & fn\_Amt & 0 \\
+\end{matrix}
+\]
+
+Here, `fp_Amt` is the financial loss due to a false positive, and `fn_Amt` is the opportunity cost due to a false negative.
+
+### Calculating `scale_pos_weight`
+
+To adjust `scale_pos_weight` using the cost matrix, you need to derive a weight that reflects the relative costs of false positives and false negatives. The idea is to increase the weight of the positive class based on the cost ratio.
+
+**Step-by-Step Calculation:**
+
+1. **Define Costs:**
+   - \( fp\_Amt \) = Cost of a false positive.
+   - \( fn\_Amt \) = Cost of a false negative.
+
+2. **Calculate Cost Ratio:**
+   - The ratio of false positive cost to false negative cost:
+   \[
+   \text{Cost Ratio} = \frac{fp\_Amt}{fn\_Amt}
+   \]
+
+3. **Set `scale_pos_weight`:**
+   - The `scale_pos_weight` parameter is then adjusted according to this cost ratio to ensure the model penalizes false positives more heavily.
+   \[
+   \text{scale\_pos\_weight} = \text{Cost Ratio}
+   \]
+
+### Example Calculation
+
+Let's assume:
+- \( fp\_Amt = 1000 \) (Cost of a false positive)
+- \( fn\_Amt = 200 \) (Cost of a false negative)
+
+1. **Calculate Cost Ratio:**
+   \[
+   \text{Cost Ratio} = \frac{1000}{200} = 5
+   \]
+
+2. **Set `scale_pos_weight`:**
+   \[
+   \text{scale\_pos\_weight} = 5
+   \]
+
+This means that the model will treat false positives as being 5 times more costly than false negatives, thereby increasing the weight for the positive class (buy signal).
+
+### Implementation in LightGBM
+
+When setting up the LightGBM model, you incorporate this calculated `scale_pos_weight`:
+
+```python
+from lightgbm import LGBMClassifier
+
+model = LGBMClassifier(scale_pos_weight=5,  # Adjusted weight
+                       num_leaves=31,
+                       feature_fraction=0.8,
+                       bagging_fraction=0.8,
+                       bagging_freq=5)
+
+model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds=10)
+```
+
+### Summary
+
+1. **Define the costs** of false positives and false negatives based on the cost matrix.
+2. **Calculate the cost ratio** to understand the relative importance of penalizing false positives.
+3. **Set `scale_pos_weight`** to this ratio, increasing the model's sensitivity to false positives.
+4. **Train the LightGBM model** with the adjusted `scale_pos_weight`, leading to fewer false positive predictions.
+
+By following these mathematical steps, you ensure that the LightGBM model is optimized to minimize financial losses associated with false positives in stock predictions.
