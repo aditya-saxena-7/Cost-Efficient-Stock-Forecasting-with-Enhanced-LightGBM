@@ -6,11 +6,7 @@ This section focuses on how data was selected, processed, and prepared for the s
 
 **Data Selection**:
 - The study focuses on data from the Shanghai Stock Exchange's main board, selecting 1,560 stocks from 2010 to 2019. 📅🏦
-- **Z-score Normalization**: This technique standardizes the data by converting it to a scale where the mean (µ) is zero and the standard deviation (σ) is one. This helps in handling different scales and making the data comparable. 
-
-  Z = (x - mu)/sigma
-
-  - **Real-World Example**: Imagine comparing heights and weights of people. Heights are in centimeters and weights in kilograms. Z-score normalization scales these measurements so they can be compared directly. 📏⚖️
+- **Z-score Normalization**: LightGBM does not require any scaling/normalization/standardization method
 
 #### B. Input Variables and Variable Selection
 
