@@ -1,7 +1,5 @@
 ### Performance and Measurement: Evaluating the Model's Effectiveness 📊💡
 
-This section delves into the evaluation of the model's performance across three key aspects: predictive accuracy, profitability, and risk control. Let's break down each aspect in detail, explaining terminologies and methodologies with real-world examples and emojis.
-
 #### A. Predictive Accuracy 🎯
 
 **Predictive accuracy** measures how well the model's predictions align with actual outcomes. The study evaluates accuracy using several metrics:
