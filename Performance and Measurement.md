@@ -17,6 +17,68 @@
    - The F0.5 score is a weighted harmonic mean of precision and recall, giving more importance to precision.
    - **Formula**: \( F0.5 = \frac{(1 + 0.5^2) \cdot \text{Precision} \cdot \text{Recall}}{0.5^2 \cdot \text{Precision} + \text{Recall}} \)
    - **Example**: Think of a sports coach focusing more on the accuracy of successful passes rather than just the number of attempts. ⚽➡️🎯
+  
+### Understanding F1, F2, and F0.5 Scores
+
+The F1, F2, and F0.5 scores are all types of F-scores used to measure the performance of a classification model, particularly how well it balances precision and recall. Let's break down each of these scores in simple terms.
+
+#### Precision and Recall
+
+Before diving into F-scores, let's quickly recap precision and recall:
+
+- **Precision:** The ratio of correctly predicted positive observations to the total predicted positives.
+  \[
+  \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+  \]
+
+- **Recall (Sensitivity):** The ratio of correctly predicted positive observations to all actual positives.
+  \[
+  \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+  \]
+
+#### F1 Score
+
+The F1 score is the harmonic mean of precision and recall. It gives equal weight to precision and recall, meaning it tries to find a balance between the two.
+
+\[
+\text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+\]
+
+**Layman Explanation:**
+- Think of the F1 score as trying to balance between being accurate when you say something is positive (precision) and making sure you catch as many positives as possible (recall).
+- **Example:** If you’re a doctor diagnosing a disease, the F1 score helps balance between how many of the diagnosed cases are actually correct (precision) and how many of the actual sick people you correctly diagnose (recall).
+
+#### F2 Score
+
+The F2 score is similar to the F1 score, but it gives more weight to recall than precision. It’s useful when missing a positive case is considered worse than incorrectly identifying a negative case as positive.
+
+\[
+\text{F2 Score} = 5 \cdot \frac{\text{Precision} \cdot \text{Recall}}{4 \cdot \text{Precision} + \text{Recall}}
+\]
+
+**Layman Explanation:**
+- The F2 score is more concerned with catching as many positives as possible (recall) even if it means having more false positives.
+- **Example:** If you’re screening for a highly contagious disease, it’s more important to catch everyone who has it (high recall), even if it means sometimes saying someone has it when they don’t (lower precision).
+
+#### F0.5 Score
+
+The F0.5 score gives more weight to precision than recall. It’s useful when false positives are more concerning than false negatives.
+
+\[
+\text{F0.5 Score} = 1.25 \cdot \frac{\text{Precision} \cdot \text{Recall}}{0.25 \cdot \text{Precision} + \text{Recall}}
+\]
+
+**Layman Explanation:**
+- The F0.5 score focuses more on being accurate when you say something is positive (precision) and less on making sure you catch all positives (recall).
+- **Example:** If you’re running a spam filter for emails, it’s more important that emails flagged as spam are actually spam (high precision), even if it means some spam emails get through (lower recall).
+
+### Summary
+
+- **F1 Score:** Balances precision and recall equally. Good when you need a balance between false positives and false negatives.
+- **F2 Score:** Emphasizes recall more. Good when it's more critical to catch all positive cases even at the cost of more false positives.
+- **F0.5 Score:** Emphasizes precision more. Good when it’s more critical to be accurate in predicting positives even if some positives are missed.
+
+By understanding these differences, you can choose the right metric based on the specific needs and consequences of your application.
 
 **Results**:
 - The LightGBM model achieved higher AUC (60.94%), precision (58.65%), and F0.5 score (57.94%) compared to XGBoost and Random Forest, indicating better predictive accuracy. 🏆
