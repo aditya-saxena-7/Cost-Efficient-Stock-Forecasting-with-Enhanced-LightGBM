@@ -511,11 +511,54 @@ Let's go through a more detailed example with multiple predictions to see the im
 
 By increasing the `scale_pos_weight`, the LightGBM model modifies the loss function to penalize false positives more heavily. This encourages the model to be more conservative in predicting the positive class (i.e., "buy" signals) unless there is strong evidence, thereby reducing the number of costly false-positive errors.
 
-In summary:
-- **`scale_pos_weight`** adjusts the weight of the positive class in the loss function.
-- A higher `scale_pos_weight` increases the penalty for false positives.
-- The model learns to minimize this weighted loss, leading to fewer false-positive predictions.
-- This approach helps in making more cost-efficient stock predictions by reducing financial losses associated with false positives.
+### Range of Entropy in Weighted Cases
+
+In non-weighted cases, the binary cross-entropy loss typically ranges between 0 and 1 for individual predictions. However, in weighted cases, the range of the entropy loss is affected by the weighting factor.
+
+#### Non-Weighted Binary Cross-Entropy:
+
+\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+
+For a single prediction:
+- If \( y = 1 \) and \( p = 0.5 \), the loss is \(-\log(0.5) = 0.693\).
+- If \( y = 0 \) and \( p = 0.5 \), the loss is also \(-\log(0.5) = 0.693\).
+
+The loss for individual predictions ranges between 0 (for perfect predictions) and \(\infty\) (for very confident but wrong predictions), though in practical applications, it is usually between 0 and a small number greater than 1.
+
+#### Weighted Binary Cross-Entropy:
+
+\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+
+Here, the weights \( w_y \) and \( w_{1-y} \) modify the loss values:
+
+- When \( y = 1 \) and the weight \( w_y = w_p \):
+  \[ \text{Loss} = -w_p \log(p) \]
+- When \( y = 0 \) and the weight \( w_{1-y} = 1 \):
+  \[ \text{Loss} = -\log(1 - p) \]
+
+The range of the weighted loss depends on the value of \( w_p \):
+- The minimum loss is still 0 (for perfect predictions).
+- The maximum loss can be much higher than 1, depending on the value of \( w_p \).
+
+For example, if \( w_p = 5 \) and the prediction is incorrect with \( p = 0.1 \) when \( y = 1 \):
+\[ \text{Loss} = -5 \log(0.1) \approx 11.51 \]
+
+### High Entropy Loss: Interpretation and Model Objective
+
+#### High Entropy Loss:
+
+A high entropy loss indicates that the model's predictions are not aligning well with the actual labels, particularly when the model is confident in its incorrect predictions. In the context of stock predictions with weighted loss:
+
+- **High Weighted Loss:** Indicates the model is making costly mistakes (e.g., predicting a "buy" signal when it should not have, leading to a significant financial loss).
+- **Focus on Reducing False Positives:** The weighted loss penalizes false positives more heavily, making the model cautious in issuing "buy" signals.
+
+#### Model Objective:
+
+The primary objective of the model in this context is to minimize the overall weighted binary cross-entropy loss. By doing so, the model aims to:
+
+1. **Reduce False Positives:** Since false positives are more costly, the high penalty encourages the model to be more accurate in predicting "buy" signals.
+2. **Balance Prediction Quality:** While reducing false positives, the model also aims to maintain a good level of accuracy for "sell" signals, ensuring a balanced performance.
+3. **Optimize Financial Outcomes:** By focusing on minimizing the most costly errors, the model helps in making more cost-efficient stock predictions, thereby improving overall financial returns.
 
 ---
 
