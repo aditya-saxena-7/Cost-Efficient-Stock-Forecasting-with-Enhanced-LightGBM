@@ -192,25 +192,7 @@ The algorithm calculates the financial costs associated with false-positive (FP)
 
 ### Understanding LightGBM Algorithm for Minimizing False-Positive Errors in Stock Prediction
 
-The paper "Stock Prediction Using Optimized LightGBM Based on Cost Awareness" introduces an innovative method for improving the reliability of stock price predictions by incorporating cost awareness, which particularly focuses on minimizing false-positive errors. Let's break down how this is achieved in the LightGBM algorithm step-by-step, using examples to illustrate key points.
-
-#### 1. Feature Engineering and Data Preparation
-**Step:** Feature Engineering
-- The dataset includes stocks from the Shanghai Stock Exchange between 2010 and 2019, with 1,500 stocks and 49 features derived from technical indicators, OHLC (Open, High, Low, Close) prices, and time-series data.
-- Features with high missing values, unique values, high correlation, or low importance are removed.
-
-**Example:**
-- Variables like daily closing prices, moving averages, and momentum indicators are selected and cleaned.
-
-#### 2. Hyperparameter Optimization with Optuna
-**Step:** Hyperparameter Optimization
-- Optuna, a hyperparameter optimization framework, is used to fine-tune LightGBM parameters such as `num_leaves`, `feature_fraction`, and `bagging_fraction`.
-- Time series split cross-validation ensures that the model generalizes well to unseen data without overfitting.
-
-**Example:**
-- If `num_leaves` is set to 143, it determines the complexity of the tree structure used in LightGBM.
-
-#### 3. Introducing Cost Awareness
+#### Introducing Cost Awareness
 **Step:** Cost Awareness Adjustment
 - The core innovation is integrating cost awareness to reduce false-positive errors (predicting a "buy" when the price won't rise).
 - A cost matrix is developed to assign higher penalties to false-positive errors compared to false-negative errors.
@@ -254,7 +236,8 @@ Let's consider a practical example to illustrate how minimizing false positives 
 
 5. **Model Prediction:**
    - The model predicts stock prices for the next day. It only issues a "buy" signal if the predicted probability of price increase is very high, reducing the chances of false positives.
-   - If the model predicts a 70% probability of price increase, it evaluates the potential cost. If the cost of a false positive (buying and the price doesn’t rise) is high, the model might avoid issuing a "buy" signal unless the probability is higher, say 85%.
+   - If the model predicts a 70% probability of price increase, it evaluates the potential cost.
+If the cost of a false positive (buying and the price doesn’t rise) is high, the model might avoid issuing a "buy" signal unless the probability is higher, say 85%.
 
 Let's dive deeper into how the cost matrix works, how `fp_Amt`, `fn_Amt`, and `scale_pos_weight` are calculated, and the flow of the algorithm to understand how it adjusts to minimize false positives.
 
@@ -380,14 +363,159 @@ model = LGBMClassifier(scale_pos_weight=5,  # Adjusted weight
 model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds=10)
 ```
 
-### Summary
+### Understanding the Logic Behind `fp_Amt` and `fn_Amt` in Stock Prediction
 
-1. **Define the costs** of false positives and false negatives based on the cost matrix.
-2. **Calculate the cost ratio** to understand the relative importance of penalizing false positives.
-3. **Set `scale_pos_weight`** to this ratio, increasing the model's sensitivity to false positives.
-4. **Train the LightGBM model** with the adjusted `scale_pos_weight`, leading to fewer false positive predictions.
+#### What Are `fp_Amt` and `fn_Amt`?
 
-By following these mathematical steps, you ensure that the LightGBM model is optimized to minimize financial losses associated with false positives in stock predictions.
+- **`fp_Amt` (False Positive Amount):** This is the financial loss incurred when the model incorrectly predicts a stock price will go up (a "buy" signal), but it doesn't. Essentially, it's the cost of making a bad investment.
+  
+- **`fn_Amt` (False Negative Amount):** This is the opportunity cost when the model fails to predict a stock price increase (a "sell" signal) but the price does go up. It's the cost of missing out on a potential profit.
+
+#### How Are `fp_Amt` and `fn_Amt` Calculated?
+
+**Example Calculation:**
+
+1. **Data Inputs:**
+   - **Buy Price:** Price at which you would buy the stock.
+   - **Sell Price:** Price at which you would sell the stock.
+   - **Number of Shares:** Number of shares you are trading.
+   - **Buy Rate:** Transaction fee for buying the stock.
+   - **Sell Rate:** Transaction fee for selling the stock.
+   - **Stamp Duty:** Tax applied on stock transactions.
+
+2. **Calculate Amounts for False Positive:**
+   - When you buy a stock at the buy price expecting it to go up, but it doesn't and instead, you sell it at a lower price.
+   - Example: Buy 100 shares at $50 each, sell them at $45 each.
+   - **Cost Calculation:**
+     - Loss per share: $50 (buy price) - $45 (sell price) = $5
+     - Total Loss: 100 shares * $5 = $500
+     - Add transaction fees and taxes to this loss to get `fp_Amt`.
+
+3. **Calculate Amounts for False Negative:**
+   - When you don't buy a stock at the buy price, missing out on the chance to sell it at a higher price.
+   - Example: Buy 100 shares at $50 each, sell them at $55 each.
+   - **Cost Calculation:**
+     - Missed profit per share: $55 (sell price) - $50 (buy price) = $5
+     - Total Missed Profit: 100 shares * $5 = $500
+     - Subtract transaction fees and taxes to get `fn_Amt`.
+
+Certainly! Let's dive into the mathematical details of how `scale_pos_weight` influences the loss function in LightGBM and how it adds a higher penalty for false positives.
+
+### Understanding the Loss Function in LightGBM
+
+LightGBM, like other gradient boosting frameworks, optimizes a loss function during training. For binary classification, a common loss function is the binary cross-entropy (logistic loss).
+
+#### Binary Cross-Entropy Loss Function:
+
+The binary cross-entropy loss for a single prediction is given by:
+
+\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+
+where:
+- \( y \) is the actual label (1 for positive, 0 for negative).
+- \( p \) is the predicted probability of the positive class.
+
+### Incorporating `scale_pos_weight`
+
+The `scale_pos_weight` parameter adjusts the loss function to give different weights to positive and negative classes. This is useful when the cost of misclassification is different for the two classes.
+
+#### Modified Loss Function:
+
+With `scale_pos_weight`, the loss function for each instance becomes:
+
+\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+
+where:
+- \( w_y \) is the weight for the positive class.
+- \( w_{1-y} \) is the weight for the negative class.
+
+For binary classification with `scale_pos_weight`, we typically adjust the weight for the positive class. Let's denote `scale_pos_weight` as \( w_p \).
+
+- For positive class (y=1): \( w_y = w_p \)
+- For negative class (y=0): \( w_{1-y} = 1 \)
+
+Thus, the modified loss function becomes:
+
+\[ \text{Loss} = -w_p \cdot y \log(p) - (1 - y) \log(1 - p) \]
+
+### Example Calculation
+
+#### Without `scale_pos_weight`:
+
+Consider the following example:
+
+- Actual label (\( y \)): 1 (positive class)
+- Predicted probability (\( p \)): 0.7
+
+The binary cross-entropy loss without any weights is:
+
+\[ \text{Loss} = -1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
+\[ \text{Loss} = -\log(0.7) \approx 0.3567 \]
+
+#### With `scale_pos_weight`:
+
+Suppose we set `scale_pos_weight` \( w_p = 5 \):
+
+The modified loss function is:
+
+\[ \text{Loss} = -5 \cdot 1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
+\[ \text{Loss} = -5 \cdot \log(0.7) \approx 5 \cdot 0.3567 = 1.7835 \]
+
+### Impact on Model Training
+
+By increasing the weight for the positive class, the loss for false positives becomes larger. This higher penalty influences the model during training:
+
+1. **Gradient Boosting Process:**
+   - LightGBM builds trees to minimize the overall loss function.
+   - With a higher penalty for false positives, the model will focus more on correctly predicting the positive class to minimize the loss.
+
+2. **Decision Boundary Adjustment:**
+   - The model adjusts its decision boundary to reduce the number of false positives.
+   - In practice, this means the model will require stronger evidence to classify an instance as positive (i.e., "buy" signal).
+
+### Detailed Example with `scale_pos_weight`
+
+Let's go through a more detailed example with multiple predictions to see the impact of `scale_pos_weight`.
+
+#### Data:
+
+| Instance | Actual Label (y) | Predicted Probability (p) | Log Loss Without Weight | Log Loss With Weight (scale_pos_weight = 5) |
+|----------|------------------|---------------------------|-------------------------|--------------------------------------------|
+| 1        | 1                | 0.9                       | -log(0.9) ≈ 0.105       | -5 * log(0.9) ≈ 0.525                      |
+| 2        | 0                | 0.1                       | -log(0.9) ≈ 0.105       | -log(0.9) ≈ 0.105                          |
+| 3        | 1                | 0.7                       | -log(0.7) ≈ 0.357       | -5 * log(0.7) ≈ 1.785                      |
+| 4        | 0                | 0.2                       | -log(0.8) ≈ 0.223       | -log(0.8) ≈ 0.223                          |
+| 5        | 1                | 0.4                       | -log(0.4) ≈ 0.916       | -5 * log(0.4) ≈ 4.580                      |
+
+#### Summarizing the Losses:
+
+**Without Weight:**
+
+\[ \text{Total Loss} = 0.105 + 0.105 + 0.357 + 0.223 + 0.916 = 1.706 \]
+
+**With Weight (scale_pos_weight = 5):**
+
+\[ \text{Total Loss} = 0.525 + 0.105 + 1.785 + 0.223 + 4.580 = 7.218 \]
+
+### Analysis
+
+- **Without `scale_pos_weight`:**
+  - The model treats all errors equally.
+  - The total loss is lower because false positives are not penalized heavily.
+
+- **With `scale_pos_weight`:**
+  - The model places more importance on minimizing false positives.
+  - The total loss is higher for false positives due to the increased weight.
+
+### Conclusion
+
+By increasing the `scale_pos_weight`, the LightGBM model modifies the loss function to penalize false positives more heavily. This encourages the model to be more conservative in predicting the positive class (i.e., "buy" signals) unless there is strong evidence, thereby reducing the number of costly false-positive errors.
+
+In summary:
+- **`scale_pos_weight`** adjusts the weight of the positive class in the loss function.
+- A higher `scale_pos_weight` increases the penalty for false positives.
+- The model learns to minimize this weighted loss, leading to fewer false-positive predictions.
+- This approach helps in making more cost-efficient stock predictions by reducing financial losses associated with false positives.
 
 ---
 
