@@ -1,5 +1,5 @@
-### Cost Efficient Stock Forecasting with Enhanced LightGBM 📈💡
-
+# Cost Efficient Stock Forecasting with Enhanced LightGBM 📈💡
+---
 ### Table of Contents
 1. [Introduction](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Introduction.md)
 2. [Model and Methodology](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Model%20and%20Methodology.md)
