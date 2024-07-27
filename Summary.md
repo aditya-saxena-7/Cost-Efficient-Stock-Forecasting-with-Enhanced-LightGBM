@@ -1,6 +1,8 @@
-# Cost Efficient Stock Forecasting with Enhanced LightGBM 📈💡
+## Cost Efficient Stock Forecasting with Enhanced LightGBM 📈💡
 ---
+
 ### Table of Contents
+---
 1. [Introduction](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Introduction.md)
 2. [Model and Methodology](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Model%20and%20Methodology.md)
 3. [Data Descriptions and Feature Engineering](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Data%20Descriptions%20and%20Feature%20Engineering.md)
@@ -9,12 +11,12 @@
 6. [Performance and Measurement](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Performance%20and%20Measurement.md)
 7. [Conclusion](https://github.com/aditya-saxena-7/Cost-Efficient-Stock-Forecasting-with-Enhanced-LightGBM/blob/master/Conclusion.md)
 
-#### Objective:
-
+### Objective:
+---
 This paper focuses on using machine learning techniques to predict stock prices while being mindful of costs involved in trading. Cost awareness focuses on minimizing false-positive errors, which are incorrect predictions of stock price increases. 🛑📊
 
-#### Four Main Stages of the Study:
-
+### Four Main Stages of the Study:
+---
 1. **Feature Engineering**:
    - This involves selecting and processing the right data features that will be used to train the model. 📊🔧
    - In this study, data from the Shanghai Stock Exchange, including over 1,500 stocks from 2010 to 2019, was used. 📅🏦
@@ -31,14 +33,15 @@ This paper focuses on using machine learning techniques to predict stock prices 
    - The final stage involves evaluating the model's performance in terms of accuracy, profitability, and risk control. 🏆
    - The model's predictions are compared with those from other popular models like XGBoost and Random Forest. ⚖️
 
-#### Feature Engineering
+### Feature Engineering
+---
 
 1. **Data Selection**:
    - The data was sourced from the main board trading market of the Shanghai Stock Exchange, including over 1,500 stocks from 2010 to 2019. 📅🏦
    
 2. **Features**:
    - **Time Series Indicators**: These include variables like week and month, helping the model understand temporal patterns. 📆
-   - **Technical Indicators**: Metrics derived from historical price and volume data, like moving averages, relative strength index (RSI), Bolinger Bands, Chande Momentum Oscillator, Commodity Channel Index, Momentum. These indicators help in identifying trends and potential reversal points. 📊 (ADD LINKS HERE)
+   - **Technical Indicators**: Metrics derived from historical price and volume data, like moving averages, relative strength index (RSI), Bolinger Bands, Chande Momentum Oscillator, Commodity Channel Index, Momentum. These indicators help in identifying trends and potential reversal points. 📊 [Terminologies Meaning](https://www.notion.so/f1ac845c58bb4199b81ea67045ea5077?v=b25b0b4229584f86961c4e7a552e70e9)
    - **OHLC Indicators**: Daily open, high, low, and close prices that summarize daily transactions. 📈📉
 
 3. **Feature Selection**:
@@ -51,21 +54,19 @@ This paper focuses on using machine learning techniques to predict stock prices 
 
 **Removing Highly Correlated Variables**:
 - Using the Pearson correlation coefficient, variables with correlations above 90% were removed to avoid redundancy.
-   
-- **Example**: If height and weight are highly correlated, using both doesn't add much value. By removing one, the model becomes more efficient. 📏⚖️
 
 **Ranking Importance**:
 - Variables were ranked based on their importance to the model. Less important variables were removed to focus on the most relevant data. 📋➡️🚀
 
-#### Labeling Methods
-
-**Labeling**:
+4. **Labeling**
 - The research changes the experiment into a binary classification problem, where the actions are "buy" or "sell." 📥📤
+  
 - **Label Definition**:
   - If the next day's closing price is higher than today's closing price, the label is 1 (indicating a buy signal). If not, the label is 0 (indicating a sell signal).
   - **Example**: If today's closing price is $100 and tomorrow's is $105, the label is 1 (buy). If tomorrow's is $95, the label is 0 (sell). 💸➡️💵
 
-#### Hyper-Parameter Optimization
+### Hyper-Parameter Optimization
+---
 
 Hyperparameters are settings or configurations that control the learning process of a machine learning model. Unlike model parameters (like weights in a neural network), hyperparameters are not learned from the data during training. They need to be set before the training process begins.
 
@@ -81,7 +82,7 @@ Hyper-parameter optimization fine-tunes the parameters of the model to enhance i
 
 #### Key Features of Optuna 🚀
 
-(Add link here)
+[Optuna in Detail](https://www.notion.so/b966adcff8f3424a9982ce0d25316b04?v=b91a28f2771440f7b4d461d962fdb569)
 
 1. **Define-by-Run**
 2. **Efficient Sampling**
@@ -102,15 +103,16 @@ For this study, three training sets were considered:
 
 The test sets were the subsequent years: 2013, 2016, and 2019, respectively.
 
-#### Model Used: LightGBM (Light Gradient Boosting Machine)
+### Model Used: LightGBM (Light Gradient Boosting Machine)
+---
 
 **LightGBM** is a powerful machine learning framework that implements the Gradient Boosting Decision Tree (GBDT) algorithm. It's known for its efficiency and high performance in handling large datasets.
 
 - **Gradient Boosting**: This technique builds multiple decision trees sequentially, where each new tree corrects errors made by the previous ones. 
 
-(Add link here)
+[LightGBM in Detail](https://www.notion.so/b966adcff8f3424a9982ce0d25316b04?v=b91a28f2771440f7b4d461d962fdb569)
 
-### How LightGBM Works 🔧
+#### How LightGBM Works 🔧
 
 1. **Initialization**: LightGBM starts with an initial prediction, often the mean of the target variable.
 2. **Gradient Computation**: For each iteration, gradients of the loss function with respect to the current prediction are computed.
@@ -119,7 +121,7 @@ The test sets were the subsequent years: 2013, 2016, and 2019, respectively.
 5. **Model Update**: Predictions are updated by adding the new tree's predictions multiplied by a learning rate.
 6. **Iteration**: Steps 2-5 are repeated for a specified number of iterations or until convergence.
 
-### Parameters in LightGBM ⚙️
+#### Parameters in LightGBM ⚙️
 
 Some important parameters to tune in LightGBM include:
 
@@ -132,6 +134,7 @@ Some important parameters to tune in LightGBM include:
 - `lambda_l1` and `lambda_l2`: L1 and L2 regularization terms. Helps in controlling overfitting.
 
 ### Cost Awareness: Optimizing Stock Predictions 📊💡
+---
 
 #### What is Cost Awareness? 🤔
 Cost awareness in stock prediction refers to the model's sensitivity to different types of prediction errors, particularly focusing on minimizing false-positive errors. A false-positive error in stock trading is when the model predicts a stock price will go up (a "buy" signal), but it doesn't, leading to a potential loss.
@@ -156,11 +159,11 @@ Traditional stock prediction models are evaluated using standard binary classifi
    - **Example**: If 60 out of 100 predicted positive movements are actually positive, your precision is 60%. 🧐
 
 4. **F1 Score**: The harmonic mean of precision and recall.
-   - **Formula**: F1 = 2 * Precision * Recall / (Precision + Recall)
+   - **Formula**: F1 = (2 * Precision * Recall) / (Precision + Recall)
    - **Example**: If both precision and recall are 75%, the F1 score is also 75%. 🔄
 
-#### Confusion Matrix 📊
-
+### Confusion Matrix 📊
+---
 The confusion matrix is a table used to describe the performance of a classification model. It has four components:
 - **True Positive (TP)**: Correctly predicted positive cases.
 - **True Negative (TN)**: Correctly predicted negative cases.
@@ -168,6 +171,7 @@ The confusion matrix is a table used to describe the performance of a classifica
 - **False Negative (FN)**: Incorrectly predicted negative cases (Type II error).
 
 **Table: Confusion Matrix**
+
 |                | Predicted Negative | Predicted Positive |
 |----------------|--------------------|--------------------|
 | Actual Negative| True Negative (TN) | False Positive (FP)|
@@ -184,7 +188,7 @@ The confusion matrix is a table used to describe the performance of a classifica
 4. Determine false-positive and false-negative costs.
 5. Aggregate individual costs to get the total cost.
 
-### Calculate Cost Matrix 📊💸
+#### Calculate Cost Matrix 📊💸
 
 ```plaintext
 Algorithm 2: Calculate Cost Matrix
@@ -212,7 +216,8 @@ cost_mat[:, 2] = 0.0
 cost_mat[:, 3] = 0.0
 return cost_mat
 ```
-#### Variables:
+
+### Variables:
 - `buy_rate`: The rate applied when buying stocks.
 - `sell_rate`: The rate applied when selling stocks.
 - `stamp_duty`: The tax or duty applied on stock transactions.
@@ -228,7 +233,7 @@ return cost_mat
 - `fn_Amt`: The array storing the calculated false-negative costs.
 - `cost_mat`: The final cost matrix containing all the costs.
 
-### Step-by-Step Explanation:
+#### Step-by-Step Calculation:
 
 1. **Initialization**:
    ```python
@@ -297,7 +302,8 @@ return cost_mat
    ```
    - Return the final cost matrix containing the calculated costs.
 
-#### How Are `fp_Amt` and `fn_Amt` Calculated?
+### How Are `fp_Amt` and `fn_Amt` Calculated?
+---
 
 1. **Data Inputs:**
    - **Buy Price:** Price at which you would buy the stock.
@@ -323,9 +329,10 @@ return cost_mat
      - Total Missed Profit: 100 shares * $5 = $500
      - Subtract transaction fees and taxes to get `fn_Amt`.
   
-#### Implementing the Cost Matrix in LightGBM
+### Implementing the Cost Matrix in LightGBM
+---
 
-**Step:** Adjusting LightGBM Parameters for Cost Sensitivity
+**1. Adjusting LightGBM Parameters for Cost Sensitivity**
 
 To integrate cost awareness, the algorithm adjusts the `scale_pos_weight` parameter. This parameter helps balance the class distribution and makes the model more sensitive to the class with higher cost (false positives in this case).
 
@@ -335,70 +342,68 @@ To integrate cost awareness, the algorithm adjusts the `scale_pos_weight` parame
 **Example:**
 - If `scale_pos_weight` is set to a high value, LightGBM will weigh false positives more heavily during training, reducing their occurrence in the final model.
 
-**Step:** Model Performance Evaluation
+**2. Model Performance Evaluation**
+
 - Performance is measured using precision, F0.5 score (which prioritizes precision over recall), and risk indicators like Sharpe ratio and Sortino ratio. (ADD LINK HERE)
 
 **Example:**
 - If the model achieves a precision of 58.65% and an F0.5 score of 57.94%, it indicates a high accuracy in predicting profitable trades while minimizing false positives.
 
 ### Understanding `scale_pos_weight`
+---
 
 The `scale_pos_weight` parameter in LightGBM adjusts the weight of positive samples to balance the classes. By increasing this weight, the algorithm penalizes errors on the positive class more heavily, which in turn reduces the likelihood of false positives.
 
-### Cost Matrix and `scale_pos_weight`
+#### Cost Matrix and `scale_pos_weight`
 
 A cost matrix assigns different penalties to different types of classification errors. For stock prediction:
 - **False Positive (FP)**: Predicting a price increase (buy signal) when the price does not increase.
 - **False Negative (FN)**: Not predicting a price increase (missed buy signal).
 
-### Example Cost Matrix
+#### Example Cost Matrix
+
 Consider the following cost matrix:
 
      ```python
      cost_matrix = [[0, fp_Amt],
                     [fn_Amt, 0]]
      ```
-### Calculating `scale_pos_weight`
+#### Calculating `scale_pos_weight`
 
 To adjust `scale_pos_weight` using the cost matrix, you need to derive a weight that reflects the relative costs of false positives and false negatives. The idea is to increase the weight of the positive class based on the cost ratio.
 
 **Step-by-Step Calculation:**
 
 1. **Define Costs:**
-   - \( fp\_Amt \) = Cost of a false positive.
-   - \( fn\_Amt \) = Cost of a false negative.
+   - fp_Amt = Cost of a false positive.
+   - fn_Amt = Cost of a false negative.
 
 2. **Calculate Cost Ratio:**
    - The ratio of false positive cost to false negative cost:
-   \[
-   \text{Cost Ratio} = \frac{fp\_Amt}{fn\_Amt}
-   \]
+     Cost Ratio = fp_Amt/fn_Amt
 
 3. **Set `scale_pos_weight`:**
    - The `scale_pos_weight` parameter is then adjusted according to this cost ratio to ensure the model penalizes false positives more heavily.
-   \[
-   \text{scale\_pos\_weight} = \text{Cost Ratio}
-   \]
 
-### Example Calculation
+   scale_pos_weight = Cost Ratio = fp_Amt/fn_Amt
+
+
+#### Example Calculation
 
 Let's assume:
-- \( fp\_Amt = 1000 \) (Cost of a false positive)
-- \( fn\_Amt = 200 \) (Cost of a false negative)
+- fp_Amt = 1000 (Cost of a false positive)
+- fn_Amt = 200 (Cost of a false negative)
 
 1. **Calculate Cost Ratio:**
-   \[
-   \text{Cost Ratio} = \frac{1000}{200} = 5
-   \]
+   Cost Ratio} = 1000/200 = 5
 
 2. **Set `scale_pos_weight`:**
-   \[
-   \text{scale\_pos\_weight} = 5
-   \]
+   scale_pos_weight = 5
 
 This means that the model will treat false positives as being 5 times more costly than false negatives, thereby increasing the weight for the positive class (buy signal).
 
 ### Implementation in LightGBM
+---
 
 When setting up the LightGBM model, you incorporate this calculated `scale_pos_weight`:
 
@@ -415,6 +420,7 @@ model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds
 ```
 
 ### Understanding the Loss Function in LightGBM
+---
 
 LightGBM, like other gradient boosting frameworks, optimizes a loss function during training. For binary classification, a common loss function is the binary cross-entropy (logistic loss).
 
@@ -422,59 +428,54 @@ LightGBM, like other gradient boosting frameworks, optimizes a loss function dur
 
 The binary cross-entropy loss for a single prediction is given by:
 
-\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+Loss = -y log(p) - (1 - y) log(1 - p)
 
 where:
-- \( y \) is the actual label (1 for positive, 0 for negative).
-- \( p \) is the predicted probability of the positive class.
+- y is the actual label (1 for positive, 0 for negative).
+- p is the predicted probability of the positive class.
 
 #### Modified Loss Function:
 
 With `scale_pos_weight`, the loss function for each instance becomes:
 
-\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+Loss = -w_y * y log(p) - w_{1-y} * (1 - y) log(1 - p)
 
 where:
-- \( w_y \) is the weight for the positive class.
-- \( w_{1-y} \) is the weight for the negative class.
+- w_y is the weight for the positive class.
+- w_{1-y} is the weight for the negative class.
 
-For binary classification with `scale_pos_weight`, we typically adjust the weight for the positive class. Let's denote `scale_pos_weight` as \( w_p \).
+For binary classification with `scale_pos_weight`, we typically adjust the weight for the positive class. Let's denote `scale_pos_weight` as w_p.
 
-- For positive class (y=1): \( w_y = w_p \)
-- For negative class (y=0): \( w_{1-y} = 1 \)
+- For positive class (y=1): (w_y = w_p)
+- For negative class (y=0): (w_{1-y} = 1)
 
 Thus, the modified loss function becomes:
 
-\[ \text{Loss} = -w_p \cdot y \log(p) - (1 - y) \log(1 - p) \]
+Loss = -w_p * y log(p) - 1 * (1 - y) log(1 - p)
 
-### Example Calculation
+#### Example Calculation
 
-#### Without `scale_pos_weight`:
+**Without `scale_pos_weight`:**
 
 Consider the following example:
 
-- Actual label (\( y \)): 1 (positive class)
-- Predicted probability (\( p \)): 0.7
+- Actual label (y): 1 (positive class)
+- Predicted probability (p): 0.7
 
 The binary cross-entropy loss without any weights is:
 
-\[ \text{Loss} = -1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
-\[ \text{Loss} = -\log(0.7) \approx 0.3567 \]
+Loss} = -1 * log(0.7) - (1 - 1) * log(1 - 0.7) = 0.3567
 
-#### With `scale_pos_weight`:
+**With `scale_pos_weight`:**
 
-Suppose we set `scale_pos_weight` \( w_p = 5 \):
+Suppose we set `scale_pos_weight` (w_p = 5):
 
 The modified loss function is:
 
-\[ \text{Loss} = -5 \cdot 1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
-\[ \text{Loss} = -5 \cdot \log(0.7) \approx 5 \cdot 0.3567 = 1.7835 \]
+Loss = -5 * 1 * log(0.7) - (1 - 1) * log(1 - 0.7) = 1.7835
 
 ### Detailed Example with `scale_pos_weight`
-
-Let's go through a more detailed example with multiple predictions to see the impact of `scale_pos_weight`.
-
-#### Data:
+---
 
 | Instance | Actual Label (y) | Predicted Probability (p) | Log Loss Without Weight | Log Loss With Weight (scale_pos_weight = 5) |
 |----------|------------------|---------------------------|-------------------------|--------------------------------------------|
@@ -488,13 +489,13 @@ Let's go through a more detailed example with multiple predictions to see the im
 
 **Without Weight:**
 
-\[ \text{Total Loss} = 0.105 + 0.105 + 0.357 + 0.223 + 0.916 = 1.706 \]
+Total Loss = 0.105 + 0.105 + 0.357 + 0.223 + 0.916 = 1.706
 
 **With Weight (scale_pos_weight = 5):**
 
-\[ \text{Total Loss} = 0.525 + 0.105 + 1.785 + 0.223 + 4.580 = 7.218 \]
+Total Loss = 0.525 + 0.105 + 1.785 + 0.223 + 4.580 = 7.218
 
-### Analysis
+#### Analysis
 
 - **Without `scale_pos_weight`:**
   - The model treats all errors equally.
@@ -505,36 +506,37 @@ Let's go through a more detailed example with multiple predictions to see the im
   - The total loss is higher for false positives due to the increased weight.
 
 ### Range of Entropy in Weighted Cases
+---
 
 In non-weighted cases, the binary cross-entropy loss typically ranges between 0 and 1 for individual predictions. However, in weighted cases, the range of the entropy loss is affected by the weighting factor.
 
 #### Non-Weighted Binary Cross-Entropy:
 
-\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+Loss = -y log(p) - (1 - y) log(1 - p)
 
 For a single prediction:
-- If \( y = 1 \) and \( p = 0.5 \), the loss is \(-\log(0.5) = 0.693\).
-- If \( y = 0 \) and \( p = 0.5 \), the loss is also \(-\log(0.5) = 0.693\).
+- If (y = 1) and (p = 0.5), the loss is (-log(0.5) = 0.693).
+- If ( y = 0) and (p = 0.5), the loss is also (-log(0.5) = 0.693).
 
-The loss for individual predictions ranges between 0 (for perfect predictions) and \(\infty\) (for very confident but wrong predictions), though in practical applications, it is usually between 0 and a small number greater than 1.
+The loss for individual predictions ranges between infinite (for very confident but wrong predictions), though in practical applications, it is usually between 0 and a small number greater than 1.
 
 #### Weighted Binary Cross-Entropy:
 
-\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+Loss = -w_y * y log(p) - w_{1-y} * (1 - y) log(1 - p)
 
-Here, the weights \( w_y \) and \( w_{1-y} \) modify the loss values:
+Here, the weights (w_y) and w_{1-y} modify the loss values:
 
-- When \( y = 1 \) and the weight \( w_y = w_p \):
-  \[ \text{Loss} = -w_p \log(p) \]
-- When \( y = 0 \) and the weight \( w_{1-y} = 1 \):
-  \[ \text{Loss} = -\log(1 - p) \]
+- When (y = 1) and the weight (w_y = w_p):
+  Loss = -w_p log(p)
+- When (y = 0) and the weight (w_{1-y} = 1):
+  Loss = -log(1 - p)
 
-The range of the weighted loss depends on the value of \( w_p \):
+The range of the weighted loss depends on the value of (w_p):
 - The minimum loss is still 0 (for perfect predictions).
-- The maximum loss can be much higher than 1, depending on the value of \( w_p \).
+- The maximum loss can be much higher than 1, depending on the value of (w_p).
 
-For example, if \( w_p = 5 \) and the prediction is incorrect with \( p = 0.1 \) when \( y = 1 \):
-\[ \text{Loss} = -5 \log(0.1) \approx 11.51 \]
+For example, if (w_p = 5) and the prediction is incorrect with (p = 0.1) when y = 1:
+Loss = -5 log(0.1) = 11.51 
 
 #### High Entropy Loss:
 
@@ -544,6 +546,7 @@ A high entropy loss indicates that the model's predictions are not aligning well
 - **Focus on Reducing False Positives:** The weighted loss penalizes false positives more heavily, making the model cautious in issuing "buy" signals.
 
 ### Impact on Model Training
+---
 
 By increasing the weight for the positive class, the loss for false positives becomes larger. This higher penalty influences the model during training:
 
@@ -556,7 +559,7 @@ By increasing the weight for the positive class, the loss for false positives be
    - In practice, this means the model will require stronger evidence to classify an instance as positive (i.e., "buy" signal).
 
 ### Detailed Example
-
+---
 Let's consider a practical example to illustrate how minimizing false positives works:
 
 1. **Data Input:**
