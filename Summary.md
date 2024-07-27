@@ -414,6 +414,147 @@ model = LGBMClassifier(scale_pos_weight=5,  # Adjusted weight
 model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds=10)
 ```
 
+### Understanding the Loss Function in LightGBM
+
+LightGBM, like other gradient boosting frameworks, optimizes a loss function during training. For binary classification, a common loss function is the binary cross-entropy (logistic loss).
+
+#### Binary Cross-Entropy Loss Function:
+
+The binary cross-entropy loss for a single prediction is given by:
+
+\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+
+where:
+- \( y \) is the actual label (1 for positive, 0 for negative).
+- \( p \) is the predicted probability of the positive class.
+
+#### Modified Loss Function:
+
+With `scale_pos_weight`, the loss function for each instance becomes:
+
+\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+
+where:
+- \( w_y \) is the weight for the positive class.
+- \( w_{1-y} \) is the weight for the negative class.
+
+For binary classification with `scale_pos_weight`, we typically adjust the weight for the positive class. Let's denote `scale_pos_weight` as \( w_p \).
+
+- For positive class (y=1): \( w_y = w_p \)
+- For negative class (y=0): \( w_{1-y} = 1 \)
+
+Thus, the modified loss function becomes:
+
+\[ \text{Loss} = -w_p \cdot y \log(p) - (1 - y) \log(1 - p) \]
+
+### Example Calculation
+
+#### Without `scale_pos_weight`:
+
+Consider the following example:
+
+- Actual label (\( y \)): 1 (positive class)
+- Predicted probability (\( p \)): 0.7
+
+The binary cross-entropy loss without any weights is:
+
+\[ \text{Loss} = -1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
+\[ \text{Loss} = -\log(0.7) \approx 0.3567 \]
+
+#### With `scale_pos_weight`:
+
+Suppose we set `scale_pos_weight` \( w_p = 5 \):
+
+The modified loss function is:
+
+\[ \text{Loss} = -5 \cdot 1 \cdot \log(0.7) - (1 - 1) \cdot \log(1 - 0.7) \]
+\[ \text{Loss} = -5 \cdot \log(0.7) \approx 5 \cdot 0.3567 = 1.7835 \]
+
+### Detailed Example with `scale_pos_weight`
+
+Let's go through a more detailed example with multiple predictions to see the impact of `scale_pos_weight`.
+
+#### Data:
+
+| Instance | Actual Label (y) | Predicted Probability (p) | Log Loss Without Weight | Log Loss With Weight (scale_pos_weight = 5) |
+|----------|------------------|---------------------------|-------------------------|--------------------------------------------|
+| 1        | 1                | 0.9                       | -log(0.9) ≈ 0.105       | -5 * log(0.9) ≈ 0.525                      |
+| 2        | 0                | 0.1                       | -log(0.9) ≈ 0.105       | -log(0.9) ≈ 0.105                          |
+| 3        | 1                | 0.7                       | -log(0.7) ≈ 0.357       | -5 * log(0.7) ≈ 1.785                      |
+| 4        | 0                | 0.2                       | -log(0.8) ≈ 0.223       | -log(0.8) ≈ 0.223                          |
+| 5        | 1                | 0.4                       | -log(0.4) ≈ 0.916       | -5 * log(0.4) ≈ 4.580                      |
+
+#### Summarizing the Losses:
+
+**Without Weight:**
+
+\[ \text{Total Loss} = 0.105 + 0.105 + 0.357 + 0.223 + 0.916 = 1.706 \]
+
+**With Weight (scale_pos_weight = 5):**
+
+\[ \text{Total Loss} = 0.525 + 0.105 + 1.785 + 0.223 + 4.580 = 7.218 \]
+
+### Analysis
+
+- **Without `scale_pos_weight`:**
+  - The model treats all errors equally.
+  - The total loss is lower because false positives are not penalized heavily.
+
+- **With `scale_pos_weight`:**
+  - The model places more importance on minimizing false positives.
+  - The total loss is higher for false positives due to the increased weight.
+
+### Range of Entropy in Weighted Cases
+
+In non-weighted cases, the binary cross-entropy loss typically ranges between 0 and 1 for individual predictions. However, in weighted cases, the range of the entropy loss is affected by the weighting factor.
+
+#### Non-Weighted Binary Cross-Entropy:
+
+\[ \text{Loss} = -y \log(p) - (1 - y) \log(1 - p) \]
+
+For a single prediction:
+- If \( y = 1 \) and \( p = 0.5 \), the loss is \(-\log(0.5) = 0.693\).
+- If \( y = 0 \) and \( p = 0.5 \), the loss is also \(-\log(0.5) = 0.693\).
+
+The loss for individual predictions ranges between 0 (for perfect predictions) and \(\infty\) (for very confident but wrong predictions), though in practical applications, it is usually between 0 and a small number greater than 1.
+
+#### Weighted Binary Cross-Entropy:
+
+\[ \text{Loss} = -w_y \cdot y \log(p) - w_{1-y} \cdot (1 - y) \log(1 - p) \]
+
+Here, the weights \( w_y \) and \( w_{1-y} \) modify the loss values:
+
+- When \( y = 1 \) and the weight \( w_y = w_p \):
+  \[ \text{Loss} = -w_p \log(p) \]
+- When \( y = 0 \) and the weight \( w_{1-y} = 1 \):
+  \[ \text{Loss} = -\log(1 - p) \]
+
+The range of the weighted loss depends on the value of \( w_p \):
+- The minimum loss is still 0 (for perfect predictions).
+- The maximum loss can be much higher than 1, depending on the value of \( w_p \).
+
+For example, if \( w_p = 5 \) and the prediction is incorrect with \( p = 0.1 \) when \( y = 1 \):
+\[ \text{Loss} = -5 \log(0.1) \approx 11.51 \]
+
+#### High Entropy Loss:
+
+A high entropy loss indicates that the model's predictions are not aligning well with the actual labels, particularly when the model is confident in its incorrect predictions. In the context of stock predictions with weighted loss:
+
+- **High Weighted Loss:** Indicates the model is making costly mistakes (e.g., predicting a "buy" signal when it should not have, leading to a significant financial loss).
+- **Focus on Reducing False Positives:** The weighted loss penalizes false positives more heavily, making the model cautious in issuing "buy" signals.
+
+### Impact on Model Training
+
+By increasing the weight for the positive class, the loss for false positives becomes larger. This higher penalty influences the model during training:
+
+1. **Gradient Boosting Process:**
+   - LightGBM builds trees to minimize the overall loss function.
+   - With a higher penalty for false positives, the model will focus more on correctly predicting the positive class to minimize the loss.
+
+2. **Decision Boundary Adjustment:**
+   - The model adjusts its decision boundary to reduce the number of false positives.
+   - In practice, this means the model will require stronger evidence to classify an instance as positive (i.e., "buy" signal).
+
 ### Detailed Example
 
 Let's consider a practical example to illustrate how minimizing false positives works:
