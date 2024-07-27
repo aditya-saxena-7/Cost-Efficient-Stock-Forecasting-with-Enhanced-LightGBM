@@ -297,13 +297,10 @@ A cost matrix assigns different penalties to different types of classification e
 ### Example Cost Matrix
 Consider the following cost matrix:
 
-\[
-\begin{matrix}
- & \text{Predict Negative} & \text{Predict Positive} \\
-\text{Actual Negative} & 0 & fp\_Amt \\
-\text{Actual Positive} & fn\_Amt & 0 \\
-\end{matrix}
-\]
+     ```python
+     cost_matrix = [[0, fp_Amt],
+                    [fn_Amt, 0]]
+     ```
 
 Here, `fp_Amt` is the financial loss due to a false positive, and `fn_Amt` is the opportunity cost due to a false negative.
 
@@ -398,8 +395,6 @@ model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds
      - Missed profit per share: $55 (sell price) - $50 (buy price) = $5
      - Total Missed Profit: 100 shares * $5 = $500
      - Subtract transaction fees and taxes to get `fn_Amt`.
-
-Certainly! Let's dive into the mathematical details of how `scale_pos_weight` influences the loss function in LightGBM and how it adds a higher penalty for false positives.
 
 ### Understanding the Loss Function in LightGBM
 
