@@ -502,9 +502,6 @@ Let's go through a more detailed example with multiple predictions to see the im
   - The model places more importance on minimizing false positives.
   - The total loss is higher for false positives due to the increased weight.
 
-### Conclusion
-
-By increasing the `scale_pos_weight`, the LightGBM model modifies the loss function to penalize false positives more heavily. This encourages the model to be more conservative in predicting the positive class (i.e., "buy" signals) unless there is strong evidence, thereby reducing the number of costly false-positive errors.
 
 ### Range of Entropy in Weighted Cases
 
