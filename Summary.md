@@ -296,6 +296,32 @@ return cost_mat
    return cost_mat
    ```
    - Return the final cost matrix containing the calculated costs.
+
+#### How Are `fp_Amt` and `fn_Amt` Calculated?
+
+1. **Data Inputs:**
+   - **Buy Price:** Price at which you would buy the stock.
+   - **Sell Price:** Price at which you would sell the stock.
+   - **Number of Shares:** Number of shares you are trading.
+   - **Buy Rate:** Transaction fee for buying the stock.
+   - **Sell Rate:** Transaction fee for selling the stock.
+   - **Stamp Duty:** Tax applied on stock transactions.
+
+2. **Calculate Amounts for False Positive:**
+   - When you buy a stock at the buy price expecting it to go up, but it doesn't and instead, you sell it at a lower price.
+   - Example: Buy 100 shares at $50 each, sell them at $45 each.
+   - **Cost Calculation:**
+     - Loss per share: $50 (buy price) - $45 (sell price) = $5
+     - Total Loss: 100 shares * $5 = $500
+     - Add transaction fees and taxes to this loss to get `fp_Amt`.
+
+3. **Calculate Amounts for False Negative:**
+   - When you don't buy a stock at the buy price, missing out on the chance to sell it at a higher price.
+   - Example: Buy 100 shares at $50 each, sell them at $55 each.
+   - **Cost Calculation:**
+     - Missed profit per share: $55 (sell price) - $50 (buy price) = $5
+     - Total Missed Profit: 100 shares * $5 = $500
+     - Subtract transaction fees and taxes to get `fn_Amt`.
   
 #### Implementing the Cost Matrix in LightGBM
 
@@ -314,6 +340,79 @@ To integrate cost awareness, the algorithm adjusts the `scale_pos_weight` parame
 
 **Example:**
 - If the model achieves a precision of 58.65% and an F0.5 score of 57.94%, it indicates a high accuracy in predicting profitable trades while minimizing false positives.
+
+### Understanding `scale_pos_weight`
+
+The `scale_pos_weight` parameter in LightGBM adjusts the weight of positive samples to balance the classes. By increasing this weight, the algorithm penalizes errors on the positive class more heavily, which in turn reduces the likelihood of false positives.
+
+### Cost Matrix and `scale_pos_weight`
+
+A cost matrix assigns different penalties to different types of classification errors. For stock prediction:
+- **False Positive (FP)**: Predicting a price increase (buy signal) when the price does not increase.
+- **False Negative (FN)**: Not predicting a price increase (missed buy signal).
+
+### Example Cost Matrix
+Consider the following cost matrix:
+
+     ```python
+     cost_matrix = [[0, fp_Amt],
+                    [fn_Amt, 0]]
+     ```
+### Calculating `scale_pos_weight`
+
+To adjust `scale_pos_weight` using the cost matrix, you need to derive a weight that reflects the relative costs of false positives and false negatives. The idea is to increase the weight of the positive class based on the cost ratio.
+
+**Step-by-Step Calculation:**
+
+1. **Define Costs:**
+   - \( fp\_Amt \) = Cost of a false positive.
+   - \( fn\_Amt \) = Cost of a false negative.
+
+2. **Calculate Cost Ratio:**
+   - The ratio of false positive cost to false negative cost:
+   \[
+   \text{Cost Ratio} = \frac{fp\_Amt}{fn\_Amt}
+   \]
+
+3. **Set `scale_pos_weight`:**
+   - The `scale_pos_weight` parameter is then adjusted according to this cost ratio to ensure the model penalizes false positives more heavily.
+   \[
+   \text{scale\_pos\_weight} = \text{Cost Ratio}
+   \]
+
+### Example Calculation
+
+Let's assume:
+- \( fp\_Amt = 1000 \) (Cost of a false positive)
+- \( fn\_Amt = 200 \) (Cost of a false negative)
+
+1. **Calculate Cost Ratio:**
+   \[
+   \text{Cost Ratio} = \frac{1000}{200} = 5
+   \]
+
+2. **Set `scale_pos_weight`:**
+   \[
+   \text{scale\_pos\_weight} = 5
+   \]
+
+This means that the model will treat false positives as being 5 times more costly than false negatives, thereby increasing the weight for the positive class (buy signal).
+
+### Implementation in LightGBM
+
+When setting up the LightGBM model, you incorporate this calculated `scale_pos_weight`:
+
+```python
+from lightgbm import LGBMClassifier
+
+model = LGBMClassifier(scale_pos_weight=5,  # Adjusted weight
+                       num_leaves=31,
+                       feature_fraction=0.8,
+                       bagging_fraction=0.8,
+                       bagging_freq=5)
+
+model.fit(X_train, y_train, eval_set=[(X_valid, y_valid)], early_stopping_rounds=10)
+```
 
 ### Detailed Example
 
