@@ -107,12 +107,6 @@ rmse = mean_squared_error(y_test, y_pred, squared=False)
 print(f'RMSE: {rmse:.4f}')
 ```
 
-### Conclusion 🏁
-
-LightGBM is a robust and efficient tool for machine learning tasks, especially when dealing with large datasets. Its advanced techniques like GOSS, EFB, and leaf-wise growth make it a top choice for many data scientists and machine learning practitioners.
-
-By understanding and effectively tuning its parameters, you can leverage LightGBM to build highly accurate predictive models. Happy coding! 🚀
-
 #### B. Feature Engineering
 
 Feature engineering involves selecting and processing the right data features to train the model effectively.
@@ -262,10 +256,6 @@ vis.plot_param_importances(study)
 vis.plot_parallel_coordinate(study)
 ```
 
-### Conclusion 🏁
-
-Optuna is a versatile and powerful framework for hyperparameter optimization. Its define-by-run approach, efficient sampling, pruning mechanisms, and rich visualizations make it an invaluable tool for tuning machine learning models. By integrating Optuna into your workflow, you can automate the tedious process of hyperparameter tuning, leading to more efficient and effective model training. Happy optimizing! 🚀
-
 #### D. Cost Awareness Adjustment
 
 Cost awareness is a unique aspect of this research, focusing on minimizing false-positive errors to reduce investment losses.
@@ -282,10 +272,6 @@ The final stage involves evaluating the model's performance in terms of predicti
   - **Accuracy**: Correctness of predictions. 🎯
   - **Profitability**: Ability to generate profits. 💰
   - **Risk Control**: Management of investment risks. 🛡️
-
-#### Real-World Example:
-
-Imagine you are a chef (the model) creating a new recipe (stock prediction). You have ingredients (features) like vegetables, spices, and sauces (time series, technical, and OHLC indicators). You carefully select the freshest and best ingredients (feature selection) and adjust the quantities to get the perfect flavor (hyper-parameter optimization). You also ensure that the dish is cost-effective (cost awareness) and test it to make sure it’s delicious (model effect evaluation).
 
 ---
 
