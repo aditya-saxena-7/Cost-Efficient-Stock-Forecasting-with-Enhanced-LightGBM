@@ -60,10 +60,6 @@ Here are some key hyperparameters optimized in the study, along with their impli
 5. **Min Child Samples**:
    - The minimum number of samples a leaf must have. It prevents the model from creating leaves with few samples, which can cause overfitting. 🌱
 
-#### Real-World Example:
-
-Imagine you are tuning a car for a race. You need to adjust various settings (hyperparameters) like tire pressure, fuel mixture, and suspension stiffness to get the best performance. Optuna is like a smart mechanic that tries different settings for you and finds the optimal configuration to win the race. 🏎️🏁
-
 ---
 
 ### Table of Contents
