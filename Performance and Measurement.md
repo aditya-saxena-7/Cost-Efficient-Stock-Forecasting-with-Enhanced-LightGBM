@@ -127,7 +127,7 @@ By understanding these differences, you can choose the right metric based on the
    - **Example**: Measuring the steepest decline in a stock's price before it starts rising again. 📉➡️📈
 
 **Results**:
-- LightGBM exhibited positive Sharpe ratio (6.14) and Sortino ratio (174.28), outperforming the other models, indicating better risk-adjusted returns and resilience during market downturns. 🔝
+- LightGBM exhibited positive Sharpe ratio (2.14) and Sortino ratio (1.28), outperforming the other models, indicating better risk-adjusted returns and resilience during market downturns. 🔝
 
 **Conclusion**:
 The optimized LightGBM model demonstrates superior predictive accuracy, profitability, and risk control compared to XGBoost and Random Forest. These performance metrics affirm the model's effectiveness in making profitable and risk-aware stock predictions. 📊🏆💡
